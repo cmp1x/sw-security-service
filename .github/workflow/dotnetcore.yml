@@ -1,0 +1,30 @@
+name: .NET Core
+
+# Controls when the workflow will run
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+  
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.101
+
+    - name: Install dependencies
+      run: dotnet restore "SW.SecurityService.sln"
+
+    - name: Build
+      run: dotnet build "SW.SecurityService.sln" --configuration Release --no-restore
+
+    - name: Test
+      run: dotnet test "SW.SecurityService.sln"  --no-restore --verbosity normal
