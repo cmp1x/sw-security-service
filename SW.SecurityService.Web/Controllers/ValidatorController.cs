@@ -1,6 +1,7 @@
 ﻿namespace SW.SecurityService.Web.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
+    using SW.SecurityService.Core.Providers;
     using SW.SecurityService.Core.Services;
     using SW.SecurityService.Web.Models;
     using System;
@@ -10,10 +11,12 @@
     public class ValidatorController : ControllerBase
     {
         private readonly ITokenService tokenService;
+        private readonly ITokenProvider tokenProvider; 
 
-        public ValidatorController(ITokenService tokenService)
+        public ValidatorController(ITokenService tokenService, ITokenProvider tokenProvider)
         {
             this.tokenService = tokenService;
+            this.tokenProvider = tokenProvider;
         }
 
         [HttpPost]
@@ -22,7 +25,7 @@
             // Should be rework to db password check
             if (credentials.Password != null)
             {
-                var token = Guid.NewGuid().ToString();
+                var token = this.tokenProvider.NewGuidInString();
                 this.tokenService.Set(
                     token,
                     credentials.User);

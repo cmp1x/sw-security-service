@@ -5,6 +5,6 @@
     public interface ITokenService
     {
         string Get(string token);
-        IDatabase Set(string token, string user);
+        bool Set(string token, string user);
     }
 }

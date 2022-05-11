@@ -20,11 +20,12 @@
             return db.StringGet(token);
         }
 
-        public IDatabase Set(string token, string user)
+        public bool Set(string token, string user)
         {
             var db = this.connectionMultiplexer.GetDatabase();
-            db.StringSet(token, user);
-            return db;
+            var isSet = db.StringSet(token, user);
+
+            return isSet;
         }
     }
 }
