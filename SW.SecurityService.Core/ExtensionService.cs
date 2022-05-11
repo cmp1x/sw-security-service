@@ -8,7 +8,7 @@
     {
         public static void AddCoreService(this IServiceCollection services, string connectionString)
         {
-            services.AddSingleton<ITokenService, TokenService>();
+            services.AddSingleton<ITokenService, RedisService>();
 
             services.AddSingleton<IConnectionMultiplexer>(
                 c => ConnectionMultiplexer.Connect(connectionString));

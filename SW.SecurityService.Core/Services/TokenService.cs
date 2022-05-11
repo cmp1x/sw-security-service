@@ -1,5 +1,6 @@
 ﻿namespace SW.SecurityService.Core.Services
 {
+    using StackExchange.Redis;
     using System.Collections.Generic;
 
     public class TokenService : ITokenService
@@ -26,6 +27,11 @@
             this.userTokens.Add(token, user);
 
             return this.userTokens;
+        }
+
+        IDatabase ITokenService.Set(string token, string user)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

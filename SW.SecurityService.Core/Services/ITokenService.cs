@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-
-namespace SW.SecurityService.Core.Services
+﻿namespace SW.SecurityService.Core.Services
 {
+    using StackExchange.Redis;
+
     public interface ITokenService
     {
         string Get(string token);
-        IDictionary<string, string> Set(string token, string user);
+        IDatabase Set(string token, string user);
     }
 }
