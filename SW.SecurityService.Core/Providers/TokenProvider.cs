@@ -4,7 +4,7 @@
 
     public class TokenProvider : ITokenProvider
     {
-        public string NewGuidInString()
+        public string GetNewToken()
         {
             return Guid.NewGuid().ToString();
         }

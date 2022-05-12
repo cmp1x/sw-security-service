@@ -20,7 +20,7 @@ namespace SW.SecurityService.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddCoreService(this.Configuration.GetValue<string>("RedisConnection"));
+            services.AddCoreServices(this.Configuration.GetValue<string>("RedisConnection"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

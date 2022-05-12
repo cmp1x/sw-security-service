@@ -25,7 +25,7 @@
             // Should be rework to db password check
             if (credentials.Password != null)
             {
-                var token = this.tokenProvider.NewGuidInString();
+                var token = this.tokenProvider.GetNewToken();
                 this.tokenService.Set(
                     token,
                     credentials.User);

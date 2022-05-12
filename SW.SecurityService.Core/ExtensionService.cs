@@ -7,14 +7,14 @@
 
     public static class ExtensionService
     {
-        public static void AddCoreService(this IServiceCollection services, string connectionString)
+        public static void AddCoreServices(this IServiceCollection services, string redisConnection)
         {
             services.AddSingleton<ITokenProvider, TokenProvider>();
 
             services.AddSingleton<ITokenService, RedisService>();
 
             services.AddSingleton<IConnectionMultiplexer>(
-                c => ConnectionMultiplexer.Connect(connectionString));
+                c => ConnectionMultiplexer.Connect(redisConnection));
         }
     }
 }
