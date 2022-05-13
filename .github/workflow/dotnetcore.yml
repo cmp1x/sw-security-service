@@ -27,4 +27,4 @@ jobs:
       run: dotnet build "SW.SecurityService.sln" --configuration Release --no-restore
 
     - name: Test
-      run: dotnet test "SW.SecurityService.sln"  --no-restore --verbosity normal
+      run: dotnet test "SW.SecurityService.Core.Tests/SW.SecurityServiceCore.Tests.csproj"  --no-restore --verbosity normal
