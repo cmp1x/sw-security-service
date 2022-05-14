@@ -6,6 +6,8 @@ namespace SW.SecurityService.Web
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
     using SW.SecurityService.Core;
+    using SW.SecurityService.CredentialRepository;
+    using AutoMapper;
 
     public class Startup
     {
@@ -20,6 +22,11 @@ namespace SW.SecurityService.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddAutoMapper(c => c.AddProfile(typeof(AutoMapperProfile)));
+
+            services.AddRepositoryServices(this.Configuration.GetConnectionString("DefaultConnectionForDapper"));
+
             services.AddCoreServices(this.Configuration.GetValue<string>("RedisConnection"));
         }
 
