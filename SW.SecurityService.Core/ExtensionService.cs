@@ -13,7 +13,7 @@
 
             services.AddSingleton<ITokenService, RedisService>();
 
-            services.AddSingleton<IAuthenticationService, AuthenicationService>();
+            services.AddSingleton<IAuthenticationService, AuthenticationService>();
 
             services.AddSingleton<IConnectionMultiplexer>(
                 c => ConnectionMultiplexer.Connect(redisConnection));

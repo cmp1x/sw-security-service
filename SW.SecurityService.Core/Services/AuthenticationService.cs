@@ -2,11 +2,11 @@
 {
     using SW.SecurityService.CredentialRepository.Repository;
 
-    public class AuthenicationService : IAuthenticationService
+    public class AuthenticationService : IAuthenticationService
     {
         private readonly ICredentialRepository credentialsRepository;
 
-        public AuthenicationService(ICredentialRepository credentialsRepository)
+        public AuthenticationService(ICredentialRepository credentialsRepository)
         {
             this.credentialsRepository = credentialsRepository;
         }
