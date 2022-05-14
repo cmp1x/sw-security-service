@@ -9,8 +9,6 @@
         public AutoMapperProfile()
         {
             CreateMap<Credentials, CredentialsDb>().ReverseMap();
-            
-            CreateMap<CredentialsDb, Credentials>().ReverseMap();
         }
     }
 }
