@@ -1,28 +1,23 @@
 ﻿namespace SW.SecurityService.Core.Tests
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
     using Moq;
-    using Xunit;
-    using Dapper;
-    using StackExchange.Redis;
-    using SW.SecurityService.CredentialRepository.Repository;
     using SW.SecurityService.Core.Services;
     using SW.SecurityService.CredentialRepository.Models;
+    using SW.SecurityService.CredentialRepository.Repository;
+    using Xunit;
 
     public class AuthenticationServiceTest
     {
         [Fact]
-        public void When_Post_Propper_Password_Return_True()
+        public void When_Passed_Correct_Password_Return_True()
         {
-            //Arrange
-            var propperPassword = "22";
+            // Arrange
+            var correctPassword = "22";
             var targetName = "Nat";
             var targetCredential = new CredentialsDb()
             {
                 User = targetName,
-                Password = propperPassword
+                Password = correctPassword
             };
 
             var dbMock = new Mock<ICredentialRepository>();
@@ -32,18 +27,18 @@
                 .Setup(db => db.GetCredential(targetName))
                 .Returns(targetCredential);
 
-            //Act
-            var actualResult = sut.IsProperPassword(targetName, propperPassword);
+            // Act
+            var actualResult = sut.IsValidCredentials(targetName, correctPassword);
 
-            //Assert
+            // Assert
             Assert.True(actualResult);
         }
 
         [Fact]
-        public void When_Post_Not_Propper_Password_Return_False()
+        public void When_Passed_Not_Propper_Password_Return_False()
         {
-            //Arrange
-            var propperPassword = "22";
+            // Arrange
+            var correctPassword = "22";
             var targetName = "Nat";
             var targetCredential = new CredentialsDb()
             {
@@ -58,18 +53,18 @@
                 .Setup(db => db.GetCredential(targetName))
                 .Returns(targetCredential);
 
-            //Act
-            var actualResult = sut.IsProperPassword(targetName, propperPassword);
+            // Act
+            var actualResult = sut.IsValidCredentials(targetName, correctPassword);
 
-            //Assert
+            // Assert
             Assert.False(actualResult);
         }
 
         [Fact]
-        public void When_Post_Null_Password_Return_False()
+        public void When_Passed_Null_Password_Return_False()
         {
-            //Arrange
-            var propperPassword = "22";
+            // Arrange
+            var correctPassword = "22";
             var targetName = "Nat";
             var targetCredential = new CredentialsDb()
             {
@@ -84,10 +79,10 @@
                 .Setup(db => db.GetCredential(targetName))
                 .Returns(targetCredential);
 
-            //Act
-            var actualResult = sut.IsProperPassword(targetName, propperPassword);
+            // Act
+            var actualResult = sut.IsValidCredentials(targetName, correctPassword);
 
-            //Assert
+            // Assert
             Assert.False(actualResult);
         }
     }

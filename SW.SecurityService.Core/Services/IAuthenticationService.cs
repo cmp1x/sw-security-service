@@ -2,6 +2,6 @@
 {
     public interface IAuthenticationService
     {
-        bool IsProperPassword(string user, string password);
+        bool IsValidCredentials(string user, string password);
     }
 }

@@ -11,7 +11,7 @@
             this.credentialsRepository = credentialsRepository;
         }
 
-        public bool IsProperPassword(string user, string password)
+        public bool IsValidCredentials(string user, string password)
         {
             var actualCredentials = this.credentialsRepository.GetCredential(user);
 

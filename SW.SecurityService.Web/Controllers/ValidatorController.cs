@@ -26,7 +26,7 @@
         [HttpPost]
         public IActionResult Post([FromBody] Credentials credentials)
         {
-            if (this.authenticationService.IsProperPassword(credentials.User, credentials.Password))
+            if (this.authenticationService.IsValidCredentials(credentials.User, credentials.Password))
             {
                 var token = this.tokenProvider.GetNewToken();
                 this.tokenService.Set(
