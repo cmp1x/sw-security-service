@@ -2,9 +2,9 @@
 {
     public static class DapperQueriesStrings
     {
-        public static string GetCredential { get; } = "SELECT [User], [Password] FROM [SWCredentials].[dbo].[UserCredential] WHERE [User] = @User";
+        public static string GetCredential { get; } = "SELECT [UserId], [UserName], [Password] FROM [SWCredentials].[dbo].[UserCredential] WHERE [UserName] = @User";
 
-        public static string CreateCredential { get; } = "INSERT INTO [SWCredentials].[dbo].[UserCredential] ([User], [Password]) VALUES (@User, @Password)";
+        public static string CreateCredential { get; } = "INSERT INTO [SWCredentials].[dbo].[UserCredential] ([UserId], [UserName], [Password]) VALUES (@UserId, @UserName, @Password)";
 
     }
 }

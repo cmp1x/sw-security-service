@@ -1,7 +1,6 @@
 ﻿namespace SW.SecurityService.Web.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
-    using SW.SecurityService.Core.Providers;
     using SW.SecurityService.Core.Services;
     using SW.SecurityService.Web.Models;
 
@@ -9,34 +8,26 @@
     [Route("[controller]")]
     public class ValidatorController : ControllerBase
     {
-        private readonly ITokenService tokenService;
-        private readonly ITokenProvider tokenProvider;
         private readonly IAuthenticationService authenticationService;
 
         public ValidatorController(
-            ITokenService tokenService,
-            ITokenProvider tokenProvider,
             IAuthenticationService authenicationService)
         {
-            this.tokenService = tokenService;
-            this.tokenProvider = tokenProvider;
             this.authenticationService = authenicationService;
         }
 
         [HttpPost]
         public IActionResult Post([FromBody] Credentials credentials)
         {
-            if (this.authenticationService.IsValidCredentials(credentials.User, credentials.Password))
-            {
-                var token = this.tokenProvider.GetNewToken();
-                this.tokenService.Set(
-                    token,
-                    credentials.User);
+            var authenticatedUser = this.authenticationService
+                .AuthenticateUser(credentials.User, credentials.Password);
 
-                return Ok(token);
+            if(authenticatedUser is null)
+            {
+                return this.BadRequest();
             }
 
-            return BadRequest();
+            return this.Ok(authenticatedUser);
         }
     }
 }

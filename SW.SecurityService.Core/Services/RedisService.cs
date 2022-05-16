@@ -20,10 +20,10 @@
             return db.StringGet(token);
         }
 
-        public bool Set(string token, string user)
+        public bool Set(string token, string userInfoJson)
         {
             var db = this.connectionMultiplexer.GetDatabase();
-            var isSet = db.StringSet(token, user);
+            var isSet = db.StringSet(token, userInfoJson);
 
             return isSet;
         }

@@ -1,89 +1,70 @@
 ﻿namespace SW.SecurityService.Core.Tests
 {
+    using FluentAssertions;
     using Moq;
+    using SW.SecurityService.Core.Models;
+    using SW.SecurityService.Core.Providers;
     using SW.SecurityService.Core.Services;
     using SW.SecurityService.CredentialRepository.Models;
     using SW.SecurityService.CredentialRepository.Repository;
+    using System;
     using Xunit;
 
     public class AuthenticationServiceTest
     {
         [Fact]
-        public void When_Passed_Correct_Password_Return_True()
+        public void When_Passed_Correct_Password_Return_UserRedis()
         {
             // Arrange
+            var targetUserName = "Nat";
             var correctPassword = "22";
-            var targetName = "Nat";
+            var userId = "vgGis4e_";
             var targetCredential = new CredentialsDb()
             {
-                User = targetName,
+                UserId = userId,
+                UserName = targetUserName,
                 Password = correctPassword
             };
 
-            var dbMock = new Mock<ICredentialRepository>();
-            var sut = new AuthenticationService(dbMock.Object);
-
-            dbMock
-                .Setup(db => db.GetCredential(targetName))
-                .Returns(targetCredential);
-
-            // Act
-            var actualResult = sut.IsValidCredentials(targetName, correctPassword);
-
-            // Assert
-            Assert.True(actualResult);
-        }
-
-        [Fact]
-        public void When_Passed_Not_Propper_Password_Return_False()
-        {
-            // Arrange
-            var correctPassword = "22";
-            var targetName = "Nat";
-            var targetCredential = new CredentialsDb()
+            var generatedToken = "123123";
+            var tokenCreatedDate = new DateTime(2007, 9, 1);
+            var expectedUserRedis = new UserRedis()
             {
-                User = targetName,
-                Password = "33"
+                UserId = userId,
+                UserName = targetUserName,
+                TokenCreated = tokenCreatedDate,
+                CurrentToken = generatedToken
             };
 
-            var dbMock = new Mock<ICredentialRepository>();
-            var sut = new AuthenticationService(dbMock.Object);
+            var redisMock = new Mock<ITokenService>();
+            var tokenProviderMock = new Mock<ITokenProvider>();
+            var dateTimeProviderMock = new Mock<IDateTimeProvider>();
+            var credentialRepositoryMock = new Mock<ICredentialRepository>();
+            
+            var sut = new AuthenticationService(
+                redisMock.Object, 
+                tokenProviderMock.Object,
+                dateTimeProviderMock.Object,
+                credentialRepositoryMock.Object);
 
-            dbMock
-                .Setup(db => db.GetCredential(targetName))
+            credentialRepositoryMock
+                .Setup(crm => crm.GetCredential(It.Is<string>(un => un == targetUserName)))
                 .Returns(targetCredential);
 
-            // Act
-            var actualResult = sut.IsValidCredentials(targetName, correctPassword);
+            tokenProviderMock
+                .Setup(tpm => tpm.GetNewToken())
+                .Returns(generatedToken);
 
-            // Assert
-            Assert.False(actualResult);
-        }
-
-        [Fact]
-        public void When_Passed_Null_Password_Return_False()
-        {
-            // Arrange
-            var correctPassword = "22";
-            var targetName = "Nat";
-            var targetCredential = new CredentialsDb()
-            {
-                User = targetName,
-                Password = string.Empty
-            };
-
-            var dbMock = new Mock<ICredentialRepository>();
-            var sut = new AuthenticationService(dbMock.Object);
-
-            dbMock
-                .Setup(db => db.GetCredential(targetName))
-                .Returns(targetCredential);
+            dateTimeProviderMock
+                .Setup(dtpm => dtpm.Now())
+                .Returns(tokenCreatedDate);
 
             // Act
-            var actualResult = sut.IsValidCredentials(targetName, correctPassword);
+            var actualUserRedis = sut.AuthenticateUser(targetUserName, correctPassword);
 
             // Assert
-            Assert.False(actualResult);
+            expectedUserRedis.Should().BeEquivalentTo(actualUserRedis);
         }
+
     }
 }
