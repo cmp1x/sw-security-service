@@ -11,6 +11,8 @@
         {
             services.AddSingleton<ITokenProvider, TokenProvider>();
 
+            services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
+
             services.AddSingleton<ITokenService, RedisService>();
 
             services.AddSingleton<IAuthenticationService, AuthenticationService>();
