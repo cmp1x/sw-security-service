@@ -28,10 +28,10 @@
             var mappedCredentialDb = this.mapper.Map<CredentialsDb>(targetCredential);
             this.credentialRepository.Create(mappedCredentialDb);
 
-            var postedUser = this.credentialRepository.GetCredential(credential.User);
+            var postedUser = this.credentialRepository.GetCredential(credential.UserName);
             var mappedPostedCredential = this.mapper.Map<Credentials>(postedUser);
 
-            return Ok($"User {mappedPostedCredential.User} posted");
+            return Ok($"User {mappedPostedCredential.UserName} posted");
         }
     }
 }

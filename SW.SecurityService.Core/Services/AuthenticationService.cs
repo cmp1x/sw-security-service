@@ -5,7 +5,7 @@
     using SW.SecurityService.Core.Models;
     using SW.SecurityService.Core.Providers;
     using SW.SecurityService.CredentialRepository.Repository;
-    
+
     public class AuthenticationService : IAuthenticationService
     {
         private readonly ITokenService tokenService;
@@ -37,8 +37,8 @@
                 {
                     UserId = actualCredentials.UserId,
                     UserName = actualCredentials.UserName,
-                    TokenCreated = dateTimeProvider.Now(),
-                    CurrentToken = token
+                    TokenCreated = this.dateTimeProvider.Now(),
+                    AuthorizationToken = token
                 };
 
                 this.tokenService.Set(
@@ -47,8 +47,10 @@
 
                 return userRedis;
             }
-
-            return null;
+            else
+            {
+                throw new ApplicationException("Password is wrong");
+            }
         }
     }
 }

@@ -10,6 +10,6 @@
 
         public DateTime TokenCreated { get; set; }
 
-        public string CurrentToken { get; set; }
+        public string AuthorizationToken { get; set; }
     }
 }

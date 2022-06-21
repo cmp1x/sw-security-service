@@ -33,16 +33,16 @@
                 UserId = userId,
                 UserName = targetUserName,
                 TokenCreated = tokenCreatedDate,
-                CurrentToken = generatedToken
+                AuthorizationToken = generatedToken
             };
 
             var redisMock = new Mock<ITokenService>();
             var tokenProviderMock = new Mock<ITokenProvider>();
             var dateTimeProviderMock = new Mock<IDateTimeProvider>();
             var credentialRepositoryMock = new Mock<ICredentialRepository>();
-            
+
             var sut = new AuthenticationService(
-                redisMock.Object, 
+                redisMock.Object,
                 tokenProviderMock.Object,
                 dateTimeProviderMock.Object,
                 credentialRepositoryMock.Object);
@@ -66,5 +66,39 @@
             expectedUserRedis.Should().BeEquivalentTo(actualUserRedis);
         }
 
+        [Fact]
+        public void When_There_Are_No_Credentials_Return_Exeption()
+        {
+            // Arrange
+            var targetUserName = "Nat";
+            var correctPassword = "22";
+            var wrongPassword = "11";
+            var userId = "vgGis4e_";
+            var targetCredential = new CredentialsDb()
+            {
+                UserId = userId,
+                UserName = targetUserName,
+                Password = correctPassword
+            };
+            
+            var redisMock = new Mock<ITokenService>();
+            var tokenProviderMock = new Mock<ITokenProvider>();
+            var dateTimeProviderMock = new Mock<IDateTimeProvider>();
+            var credentialRepositoryMock = new Mock<ICredentialRepository>();
+
+            var sut = new AuthenticationService(
+                redisMock.Object,
+                tokenProviderMock.Object,
+                dateTimeProviderMock.Object,
+                credentialRepositoryMock.Object);
+
+            credentialRepositoryMock
+                .Setup(crm => crm.GetCredential(It.Is<string>(un => un == targetUserName)))
+                .Returns(targetCredential);
+                        
+            // Act
+            // Assert
+            Assert.Throws<ApplicationException>(() => sut.AuthenticateUser(targetUserName, wrongPassword));
+        }
     }
 }

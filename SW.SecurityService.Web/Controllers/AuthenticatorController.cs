@@ -3,14 +3,15 @@
     using Microsoft.AspNetCore.Mvc;
     using SW.SecurityService.Core.Services;
     using SW.SecurityService.Web.Models;
+    using System;
 
     [ApiController]
     [Route("[controller]")]
-    public class ValidatorController : ControllerBase
+    public class AuthenticatorController : ControllerBase
     {
         private readonly IAuthenticationService authenticationService;
 
-        public ValidatorController(
+        public AuthenticatorController(
             IAuthenticationService authenicationService)
         {
             this.authenticationService = authenicationService;
@@ -19,15 +20,17 @@
         [HttpPost]
         public IActionResult Post([FromBody] Credentials credentials)
         {
-            var authenticatedUser = this.authenticationService
-                .AuthenticateUser(credentials.User, credentials.Password);
-
-            if(authenticatedUser is null)
+            try
             {
-                return this.BadRequest();
-            }
+                var authenticatedUser = this.authenticationService
+                    .AuthenticateUser(credentials.UserName, credentials.Password);
 
-            return this.Ok(authenticatedUser);
+                return this.Ok(authenticatedUser);
+            }
+            catch (Exception ex)
+            {
+                return this.BadRequest(ex.Message);
+            }
         }
     }
 }
