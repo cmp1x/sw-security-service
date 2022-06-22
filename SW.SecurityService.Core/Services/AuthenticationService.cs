@@ -2,6 +2,7 @@
 {
     using System;
     using Newtonsoft.Json;
+    using SW.SecurityService.Core.Enums;
     using SW.SecurityService.Core.Models;
     using SW.SecurityService.Core.Providers;
     using SW.SecurityService.CredentialRepository.Repository;
@@ -34,7 +35,7 @@
             
             if (actualCredentials is null)
             {
-                authenticationAnswer.nonExistenLogin = true;
+                authenticationAnswer.Status = AuthenticationAnswerStatus.UserNotExist;
 
                 return authenticationAnswer;
             }
@@ -54,11 +55,12 @@
                     token,
                     JsonConvert.SerializeObject(userRedis));
                 authenticationAnswer.userRedis = userRedis;
+                authenticationAnswer.Status = AuthenticationAnswerStatus.Authorized;
                 
                 return authenticationAnswer;
             }
 
-            authenticationAnswer.wrongPassword = true;
+            authenticationAnswer.Status = AuthenticationAnswerStatus.WrongPassword;
             return authenticationAnswer;
         }
     }

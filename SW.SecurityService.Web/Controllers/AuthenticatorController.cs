@@ -1,6 +1,7 @@
 ﻿namespace SW.SecurityService.Web.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
+    using SW.SecurityService.Core.Enums;
     using SW.SecurityService.Core.Services;
     using SW.SecurityService.Web.Models;
 
@@ -22,12 +23,12 @@
             var authenticatedUser = this.authenticationService
                 .AuthenticateUser(credentials.UserName, credentials.Password);
 
-            if (authenticatedUser.wrongPassword)
+            if (authenticatedUser.Status == AuthenticationAnswerStatus.WrongPassword)
             {
                 return this.Unauthorized($"Password is wrong");
             }
 
-            if (authenticatedUser.nonExistenLogin)
+            if (authenticatedUser.Status == AuthenticationAnswerStatus.UserNotExist)
             {
                 return this.Unauthorized($"There are no credentials of '{credentials.UserName}' in the database");
             }

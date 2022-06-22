@@ -2,6 +2,7 @@
 {
     using FluentAssertions;
     using Moq;
+    using SW.SecurityService.Core.Enums;
     using SW.SecurityService.Core.Models;
     using SW.SecurityService.Core.Providers;
     using SW.SecurityService.Core.Services;
@@ -77,7 +78,7 @@
             var newPasword = "33";
             var expectedAuthenticationAnswer = new AuthenticationAnswer()
             {
-                nonExistenLogin = true
+                Status = AuthenticationAnswerStatus.UserNotExist
             };
 
             var tokenServiceMock = new Mock<ITokenService>();
@@ -113,7 +114,7 @@
 
             var expectedAuthenticationAnswer = new AuthenticationAnswer()
             {
-                wrongPassword = true
+                Status = AuthenticationAnswerStatus.WrongPassword
             };
 
             var tokenServiceMock = new Mock<ITokenService>();
