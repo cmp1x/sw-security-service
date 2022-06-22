@@ -26,9 +26,6 @@
                         new { UserName = userName })
                     .FirstOrDefault();
 
-                if (targetCredential is null)
-                    throw new ApplicationException($"There are no credentials of '{userName}' in the database");
-
                 return targetCredential;
             }
         }

@@ -4,6 +4,6 @@ namespace SW.SecurityService.Core.Services
 {
     public interface IAuthenticationService
     {
-        UserRedis AuthenticateUser(string userName, string password);
+        AuthenticationAnswer AuthenticateUser(string userName, string password);
     }
 }

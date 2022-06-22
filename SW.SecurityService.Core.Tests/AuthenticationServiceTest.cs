@@ -28,12 +28,15 @@
 
             var generatedToken = "123123";
             var tokenCreatedDate = new DateTime(2007, 9, 1);
-            var expectedUserRedis = new UserRedis()
+            var expectedAuthenticationAnswer = new AuthenticationAnswer()
             {
-                UserId = userId,
-                UserName = targetUserName,
-                TokenCreated = tokenCreatedDate,
-                AuthorizationToken = generatedToken
+                userRedis = new UserRedis()
+                {
+                    UserId = userId,
+                    UserName = targetUserName,
+                    TokenCreated = tokenCreatedDate,
+                    AuthorizationToken = generatedToken
+                }
             };
 
             var redisMock = new Mock<ITokenService>();
@@ -60,45 +63,79 @@
                 .Returns(tokenCreatedDate);
 
             // Act
-            var actualUserRedis = sut.AuthenticateUser(targetUserName, correctPassword);
+            var actualAuthenticationAnswer = sut.AuthenticateUser(targetUserName, correctPassword);
 
             // Assert
-            expectedUserRedis.Should().BeEquivalentTo(actualUserRedis);
+            expectedAuthenticationAnswer.Should().BeEquivalentTo(actualAuthenticationAnswer);
         }
 
         [Fact]
-        public void When_There_Are_No_Credentials_Return_Exeption()
+        public void When_There_Are_No_Credentials_Return_AuthenticationAnswer_nonExistenLogin()
         {
-            // Arrange
-            var targetUserName = "Nat";
-            var correctPassword = "22";
-            var wrongPassword = "11";
-            var userId = "vgGis4e_";
-            var targetCredential = new CredentialsDb()
+            //Arrange
+            var newUserName = "Kat";
+            var newPasword = "33";
+            var expectedAuthenticationAnswer = new AuthenticationAnswer()
             {
-                UserId = userId,
-                UserName = targetUserName,
-                Password = correctPassword
+                nonExistenLogin = true
             };
-            
-            var redisMock = new Mock<ITokenService>();
+
+            var tokenServiceMock = new Mock<ITokenService>();
             var tokenProviderMock = new Mock<ITokenProvider>();
             var dateTimeProviderMock = new Mock<IDateTimeProvider>();
-            var credentialRepositoryMock = new Mock<ICredentialRepository>();
+            var credentialsRepositoryMock = new Mock<ICredentialRepository>();
 
             var sut = new AuthenticationService(
-                redisMock.Object,
+                tokenServiceMock.Object,
                 tokenProviderMock.Object,
                 dateTimeProviderMock.Object,
-                credentialRepositoryMock.Object);
+                credentialsRepositoryMock.Object);
 
-            credentialRepositoryMock
-                .Setup(crm => crm.GetCredential(It.Is<string>(un => un == targetUserName)))
+            //Act
+            var actualAuthenticationAnswer = sut.AuthenticateUser(newUserName, newPasword);
+
+            //Assert
+            expectedAuthenticationAnswer.Should().BeEquivalentTo(actualAuthenticationAnswer);
+        }
+
+        [Fact]
+        public void When_There_Are_Wrong_Password_Return_AuthenticationAnswer_wrongPassword()
+        {
+            //Arrange
+            var targetUserName = "Slava";
+            var targetPassword = "11";
+            var wrongPassword = "L>JHdfsx5&^B";
+            var targetCredential = new CredentialsDb()
+            {
+                Password = targetPassword,
+                UserName = targetUserName
+            };
+
+            var expectedAuthenticationAnswer = new AuthenticationAnswer()
+            {
+                wrongPassword = true
+            };
+
+            var tokenServiceMock = new Mock<ITokenService>();
+            var tokenProviderMock = new Mock<ITokenProvider>();
+            var dateProviderMock = new Mock<IDateTimeProvider>();
+            var credRepositiryMock = new Mock<ICredentialRepository>();
+
+            var sut = new AuthenticationService(
+                tokenServiceMock.Object,
+                tokenProviderMock.Object,
+                dateProviderMock.Object,
+                credRepositiryMock.Object);
+
+            credRepositiryMock
+                .Setup(crm => crm.GetCredential(targetUserName))
                 .Returns(targetCredential);
-                        
-            // Act
-            // Assert
-            Assert.Throws<ApplicationException>(() => sut.AuthenticateUser(targetUserName, wrongPassword));
+
+            //Act
+            var actualAuthenticationAnswer = sut.AuthenticateUser(targetUserName, wrongPassword);
+
+            //Assert
+            expectedAuthenticationAnswer.Should().BeEquivalentTo(actualAuthenticationAnswer);
         }
     }
 }

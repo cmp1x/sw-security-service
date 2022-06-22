@@ -3,7 +3,6 @@
     using Microsoft.AspNetCore.Mvc;
     using SW.SecurityService.Core.Services;
     using SW.SecurityService.Web.Models;
-    using System;
 
     [ApiController]
     [Route("[controller]")]
@@ -20,17 +19,20 @@
         [HttpPost]
         public IActionResult Post([FromBody] Credentials credentials)
         {
-            try
-            {
-                var authenticatedUser = this.authenticationService
-                    .AuthenticateUser(credentials.UserName, credentials.Password);
+            var authenticatedUser = this.authenticationService
+                .AuthenticateUser(credentials.UserName, credentials.Password);
 
-                return this.Ok(authenticatedUser);
-            }
-            catch (Exception ex)
+            if (authenticatedUser.wrongPassword)
             {
-                return this.BadRequest(ex.Message);
+                return this.Unauthorized($"Password is wrong");
             }
+
+            if (authenticatedUser.nonExistenLogin)
+            {
+                return this.Unauthorized($"There are no credentials of '{credentials.UserName}' in the database");
+            }
+
+            return this.Ok(authenticatedUser.userRedis);
         }
     }
 }

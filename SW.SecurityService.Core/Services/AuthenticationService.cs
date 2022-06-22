@@ -25,10 +25,19 @@
             this.credentialsRepository = credentialsRepository;
         }
 
-        public UserRedis AuthenticateUser(string userName, string password)
+        public AuthenticationAnswer AuthenticateUser(string userName, string password)
         {
             var actualCredentials = this.credentialsRepository
                 .GetCredential(userName);
+
+            var authenticationAnswer = new AuthenticationAnswer();
+            
+            if (actualCredentials is null)
+            {
+                authenticationAnswer.nonExistenLogin = true;
+
+                return authenticationAnswer;
+            }
 
             if (password == actualCredentials.Password)
             {
@@ -44,13 +53,13 @@
                 this.tokenService.Set(
                     token,
                     JsonConvert.SerializeObject(userRedis));
+                authenticationAnswer.userRedis = userRedis;
+                
+                return authenticationAnswer;
+            }
 
-                return userRedis;
-            }
-            else
-            {
-                throw new ApplicationException("Password is wrong");
-            }
+            authenticationAnswer.wrongPassword = true;
+            return authenticationAnswer;
         }
     }
 }
