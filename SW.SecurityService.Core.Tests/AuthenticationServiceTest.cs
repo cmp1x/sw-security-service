@@ -37,7 +37,8 @@
                     UserName = targetUserName,
                     TokenCreated = tokenCreatedDate,
                     AuthorizationToken = generatedToken
-                }
+                },
+                Status = AuthenticationAnswerStatus.Authorized
             };
 
             var redisMock = new Mock<ITokenService>();
