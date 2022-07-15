@@ -1,10 +1,10 @@
 ﻿namespace SW.SecurityService.CredentialRepository.Repository
 {
     using Dapper;
+    using MySql.Data.MySqlClient;
     using SW.SecurityService.CredentialRepository.Models;
     using System;
     using System.Data;
-    using System.Data.SqlClient;
     using System.Linq;
 
     public class CredentialRepository : ICredentialRepository
@@ -18,7 +18,7 @@
 
         public CredentialsDb GetCredential(string userName)
         {
-            using (IDbConnection db = new SqlConnection(this.connectionString))
+            using (IDbConnection db = new MySqlConnection(this.connectionString))
             {
                 var targetCredential = db
                     .Query<CredentialsDb>(
@@ -36,7 +36,7 @@
                 credential.UserId = Guid.NewGuid().ToString();
 
 
-            using (IDbConnection db = new SqlConnection(this.connectionString))
+            using (IDbConnection db = new MySqlConnection(this.connectionString))
             {
 
                 try
