@@ -2,6 +2,7 @@
 {
     using Dapper;
     using SW.SecurityService.CredentialRepository.Models;
+    using System;
     using System.Data;
     using System.Data.SqlClient;
     using System.Linq;
@@ -15,22 +16,41 @@
             this.connectionString = connectionString;
         }
 
-        public CredentialsDb GetCredential(string user)
+        public CredentialsDb GetCredential(string userName)
         {
             using (IDbConnection db = new SqlConnection(this.connectionString))
             {
-                return db
+                var targetCredential = db
                     .Query<CredentialsDb>(
                         DapperQueriesStrings.GetCredential,
-                        new { User = user })
+                        new { UserName = userName })
                     .FirstOrDefault();
+
+                return targetCredential;
             }
         }
 
         public void Create(CredentialsDb credential)
         {
+            if (credential.UserId is null)
+                credential.UserId = Guid.NewGuid().ToString();
+
+
             using (IDbConnection db = new SqlConnection(this.connectionString))
             {
+
+                try
+                {
+                    db.Query<CredentialsDb>(
+                        DapperQueriesStrings.GetCredential,
+                        new { UserName = credential.UserName })
+                        .FirstOrDefault();
+                }
+                catch (Exception Ex)
+                {
+                    throw new ApplicationException(Ex.Message);
+                }
+
                 db.Execute(DapperQueriesStrings.CreateCredential, credential);
             }
         }

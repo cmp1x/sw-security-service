@@ -1,7 +1,9 @@
-﻿namespace SW.SecurityService.Core.Services
+﻿using SW.SecurityService.Core.Models;
+
+namespace SW.SecurityService.Core.Services
 {
     public interface IAuthenticationService
     {
-        bool IsValidCredentials(string user, string password);
+        AuthenticationAnswer AuthenticateUser(string userName, string password);
     }
 }
