@@ -5,17 +5,18 @@ name: Build pipelines
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
-    branches: [ main ]
+    branches: [ main, dev ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, dev ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
+  # This workflow contains first job called "build"
   build:
+    name: Build
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -36,3 +37,31 @@ jobs:
         
         # Use always() to always run this step to publish test results when there are test failures
         if: ${{ always() }}
+  
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Copy repository contents via scp
+      uses: appleboy/scp-action@master
+      env: 
+        host: ${{ secrets.HOST }}
+        username: ${{secrets.USER}}
+        port: ${{secret.PORT}}
+        key: ${{secrets.SSHKEY}}
+      with:
+        source: "."
+        target: "/var/www/a5t.ru/api/SecurityService"
+    
+    - name: Executing remote command
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        USERNAME: ${{ secrets.USERNAME }}
+        PORT: ${{ secrets.PORT }}
+        KEY: ${{ secrets.SSHKEY }}
+        script: sudo systemctl restart kestrel-SecurityService.service
+
+    
