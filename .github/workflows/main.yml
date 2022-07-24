@@ -46,12 +46,11 @@ jobs:
 
     - name: Copy repository contents via scp
       uses: appleboy/scp-action@master
-      env: 
-        host: ${{ github.HOST }}
-        username: ${{ github.USER }}
-        password: ${{ github.PASSWORD }}
-        port: ${{ github.PORT }}
-      with:
+      with: 
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USER }}
+        password: ${{ secrets.PASSWORD }}
+        port: ${{ secrets.PORT }}
         source: "."
         target: "/var/www/a5t.ru/api/SecurityService"
     
