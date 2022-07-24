@@ -47,10 +47,10 @@ jobs:
     - name: Copy repository contents via scp
       uses: appleboy/scp-action@master
       env: 
-        host: ${{ secrets.HOST }}
-        username: ${{secrets.USER}}
-        port: ${{secrets.PORT}}
-        key: ${{secrets.SSHKEY}}
+        HOST: ${{ secrets.HOST }}
+        USERNAME: ${{secrets.USER}}
+        PORT: ${{secrets.PORT}}
+        KEY: ${{secrets.SSH_KEY}}
       with:
         source: "."
         target: "/var/www/a5t.ru/api/SecurityService"
@@ -58,10 +58,10 @@ jobs:
     - name: Executing remote command
       uses: appleboy/ssh-action@master
       with:
-        host: ${{ secrets.HOST }}
+        HOST: ${{ secrets.HOST }}
         USERNAME: ${{ secrets.USERNAME }}
         PORT: ${{ secrets.PORT }}
-        KEY: ${{ secrets.SSHKEY }}
+        KEY: ${{ secrets.SSH_KEY }}
         script: sudo systemctl restart kestrel-SecurityService.service
 
     
