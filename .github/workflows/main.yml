@@ -58,13 +58,14 @@ jobs:
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
-        script: cd /var/www/a5t.ru/api/SecurityService
-                dotnet publish --configuration Release
-                systemctl daemon-reload
-                sudo systemctl restart kestrel-SecurityService.service
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.SSH_KEY }}
+        script: |
+          cd /var/www/a5t.ru/api/SecurityService
+          dotnet publish --configuration Release
+          systemctl daemon-reload
+          sudo systemctl restart kestrel-SecurityService.service
 
 
     
