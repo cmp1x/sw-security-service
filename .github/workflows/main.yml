@@ -57,13 +57,13 @@ jobs:
     - name: Build and restart
       uses: fifsky/ssh-action@master
       with:
-        host: ${{ secrets.HOST }}
-        user: ${{ secrets.USERNAME }}
-        key: ${{ secrets.SSH_KEY }}
-        args: "-tt -vvv"
         command: |
           cd /var/www/a5t.ru/api/SecurityService
           dotnet publish --configuration Release
           systemctl daemon-reload
           sudo systemctl restart kestrel-SecurityService.service
+        host: ${{ secrets.HOST }}
+        user: ${{ secrets.USERNAME }}
+        key: ${{ secrets.SSH_KEY }}
+        args: "-tt -vvv"
     
