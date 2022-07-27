@@ -60,7 +60,7 @@ jobs:
         host: ${{ secrets.HOST }}
         user: ${{ secrets.USERNAME }}
         key: ${{ secrets.SSH_KEY }}
-        args: "-tt"
+        args: "-tt -vvv"
         command: |
           cd /var/www/a5t.ru/api/SecurityService
           dotnet publish --configuration Release
