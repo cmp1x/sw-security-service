@@ -54,19 +54,15 @@ jobs:
         source: "."
         target: "/var/www/a5t.ru/api/SecurityService"
     
-    - name: Executing remote command
-      uses: appleboy/ssh-action@master
+    - name: Build and restart
+      uses: fifsky/ssh-action@master
       with:
         host: ${{ secrets.HOST }}
-        port: ${{ secrets.PORT }}
-        username: ${{ secrets.USERNAME }}
-        password: ${{ secrets.PASSWORD }}
+        user: ${{ secrets.USERNAME }}
         key: ${{ secrets.SSH_KEY }}
-        script: |
+        command: |
           cd /var/www/a5t.ru/api/SecurityService
           dotnet publish --configuration Release
           systemctl daemon-reload
           sudo systemctl restart kestrel-SecurityService.service
-
-
     
