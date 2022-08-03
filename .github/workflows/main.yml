@@ -61,8 +61,11 @@ jobs:
         port: ${{ secrets.PORT }}
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
-        script: sudo systemctl restart kestrel-SecurityService.service
-          
+        script: whoami
+          #cd /var/www/a5t.ru/api/SecurityService
+          #dotnet publish --configuration Release
+          #systemctl daemon-reload
+          #sudo systemctl restart kestrel-SecurityService.service
 
 
     
