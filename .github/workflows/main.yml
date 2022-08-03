@@ -49,7 +49,7 @@ jobs:
       with: 
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USER }}
-        password: ${{ secrets.PASSWORD }}
+        KEY: ${{ secrets.SSHKEY }}
         port: ${{ secrets.PORT }}
         source: "."
         target: "/var/www/a5t.ru/api/SecurityService"
@@ -61,11 +61,8 @@ jobs:
         port: ${{ secrets.PORT }}
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
-        script: |
-          cd /var/www/a5t.ru/api/SecurityService
-          dotnet publish --configuration Release
-          systemctl daemon-reload
-          sudo systemctl restart kestrel-SecurityService.service
+        script: sudo systemctl restart kestrel-SecurityService.service
+          
 
 
     
