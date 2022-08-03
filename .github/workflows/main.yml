@@ -60,11 +60,11 @@ jobs:
         host: ${{ secrets.HOST }}
         user: ${{ secrets.USER }}
         key: ${{ secrets.SSH_KEY}}
-        command: sh /var/www/a5t.ru/scripts# nano buildandrestart.sh
-          #cd /var/www/a5t.ru/api/SecurityService
-          #dotnet publish --configuration Release
-          #systemctl daemon-reload
-          #sudo systemctl restart kestrel-SecurityService.service
+        command: |
+          cd /var/www/a5t.ru/api/SecurityService
+          dotnet publish --configuration Release
+          systemctl daemon-reload
+          sudo systemctl restart kestrel-SecurityService.service
 
 
     
