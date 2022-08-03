@@ -1,10 +1,11 @@
 ﻿namespace SW.SecurityService.Web.Controllers
 {
+    using System;
     using Microsoft.AspNetCore.Mvc;
     using SW.SecurityService.Core.Enums;
     using SW.SecurityService.Core.Services;
     using SW.SecurityService.Web.Models;
-
+    
     [ApiController]
     [Route("[controller]")]
     public class AuthenticatorController : ControllerBase
@@ -18,7 +19,7 @@
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] Credentials credentials)
+        public IActionResult Login([FromBody] Credentials credentials)
         {
             var authenticatedUser = this.authenticationService
                 .AuthenticateUser(credentials.UserName, credentials.Password);
@@ -34,6 +35,12 @@
             }
 
             return this.Ok(authenticatedUser.userRedis);
+        }
+
+        [HttpPost]
+        public IActionResult Logout([FromQuery] string token)
+        {
+            throw new NotImplementedException("We need to implement logouit unctionality");
         }
     }
 }
