@@ -29,13 +29,12 @@ jobs:
         target: "/var/www/a5t.ru/api/SecurityService"
     
     - name: Executing remote command
-      uses: appleboy/ssh-action@master
+      uses: fifsky/ssh-action@master
       with:
         host: ${{ secrets.HOST }}
-        port: ${{ secrets.PORT }}
-        username: ${{ secrets.USERNAME }}
-        password: ${{ secrets.PASSWORD }}
-        script: |
+        user: ${{ secrets.USER }}
+        key: ${{ secrets.SSH_KEY}}
+        command: |
           cd /var/www/a5t.ru/api/SecurityService
           dotnet publish --configuration Release
           systemctl daemon-reload
